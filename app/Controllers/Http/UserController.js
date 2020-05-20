@@ -6,10 +6,13 @@ const User = use('App/Models/User')
 class UserController {
 
   async signup({request, response}){
-    const {email, password} = request.all();
+    const {email, password, username, f_name, l_name} = request.all();
     console.log(email,password);
     const validation = await validate(request.all(), {
       email: 'required|email',
+      username: 'required',
+      f_name: 'required',
+      l_name: 'required',
       password: 'required|min:5'
     });
 
@@ -26,7 +29,10 @@ class UserController {
 
     const user = await User.create({
       email,
-      password
+      password,
+      username,
+      f_name,
+      l_name
     });
 
     return response.status(200).send({message:'Has creado tu usuario con exito.'})
