@@ -24,3 +24,6 @@ Route.group( ()=>{
   Route.post('usuarios/signup', 'UserController.signup');
   Route.post('usuarios/login', 'UserController.login');
 }).prefix('api/')
+
+//Crud Jesus Alcala Luna
+Route.get('shops', 'ShopController.getShops');
