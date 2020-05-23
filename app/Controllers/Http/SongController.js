@@ -45,7 +45,15 @@ class SongController {
     return response.status(200).send({message:'Cancion editada con exito', data:editada})
   }
 
+  async eliminarUsuario({request,response}){
+    const {id} = request.all()
+    const eliminado = await Database
+      .table('users')
+      .where('id', id)
+      .delete()
+    return response.status(200).send({message:'Cancion eliminada'})
 
+  }
 }
 
 module.exports = SongController
