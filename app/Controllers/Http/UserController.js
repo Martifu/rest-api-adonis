@@ -10,11 +10,7 @@ class UserController {
 
     async login({ request, auth, response }) {
         const { email, password } = request.all();
-
-        const validation = await validate(request.all(), {
-            email: 'required',
-            password: 'required'
-        });
+        const token = await auth.attempt(email, password);
 
         if (validation.fails()) {
             return response.status(400).send({ "message": validation.messages() });
@@ -37,7 +33,34 @@ class UserController {
             return response.status(400).send({ 'message': error });
         }
 
+
     }
+
+    async updateUser({ request, response }) {
+        const validation = await validate(request.all(), {
+            username: 'required',
+            f_name: 'required',
+            l_name: 'required',
+            password: 'required|min:5'
+        });
+
+        if (validation.fails()) {
+            return response.status(400).send({ message: validation.messages() })
+        }
+
+        const user = await User
+            .query()
+            .where('id', request.body['id'])
+            .update({
+                username: request.body['username'],
+                f_name: request.body['f_name'],
+                l_name: request.body['l_name'],
+                password: request.body['password']
+            })
+        const editado = await User.query().where('id', request.body['id']).fetch()
+        return response.status(200).send({ message: 'Usuario editado con exito', data: editado })
+    }
+
 
     async signup({ request, response }) {
         const { email, password, username, f_name, l_name } = request.all();
