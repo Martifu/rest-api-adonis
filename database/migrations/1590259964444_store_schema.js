@@ -7,9 +7,9 @@ class StoreSchema extends Schema {
   up () {
     this.create('stores', (table) => {
       table.increments()
-      table.string('Name', 30).notNullable();
-      table.string('Address', 100).notNullable();
-      table.string('Phone', 12).notNullable();
+      table.string('name', 30).notNullable();
+      table.string('address', 100).notNullable();
+      table.string('phone', 12).notNullable();
       table.timestamps()
     })
   }

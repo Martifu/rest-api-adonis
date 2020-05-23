@@ -41,3 +41,6 @@ Route.group( ()=>{
 
 //Crud Jesus Alcala Luna
 Route.get('shops', 'ShopController.getShops');
+Route.post('shops/create','ShopController.createShops');
+Route.post('shops/update','ShopController.updateShops');
+Route.post('shops/delete','ShopController.deleteShops');
