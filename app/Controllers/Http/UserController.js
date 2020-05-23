@@ -10,7 +10,11 @@ class UserController {
 
     async login({ request, auth, response }) {
         const { email, password } = request.all();
-        const token = await auth.attempt(email, password);
+
+        const validation = await validate(request.all(), {
+            email: 'required',
+            password: 'required'
+        });
 
         if (validation.fails()) {
             return response.status(400).send({ "message": validation.messages() });
