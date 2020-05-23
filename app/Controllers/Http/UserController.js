@@ -10,13 +10,35 @@ class UserController {
 
     async login({ request, auth, response }) {
         const { email, password } = request.all();
-        const token = await auth.attempt(email, password);
 
-        return response.status(200).send({ 'message': "Ok", data: token });
+        const validation = await validate(request.all(), {
+            email: 'required',
+            password: 'required'
+        });
+
+        if (validation.fails()) {
+            return response.status(400).send({ "message": validation.messages() });
+        }
+
+        const user = await User.findBy('email', email)
+        if (!user) {
+            return response.status(400).send({ "message": "No existe este email" });
+        }
+
+        const isSame = Hash.verify(password, user.password);
+        if (!isSame) {
+            return response.status(400).send('Contraseña incorrecta');
+        }
+
+        try {
+            const token = await auth.attempt(email, password);
+            return response.status(200).send({ 'message': "Ok", data: token });
+        } catch (error) {
+            return response.status(400).send({ 'message': error });
+        }
+
     }
 
-
-<<<<<<< HEAD
     async signup({ request, response }) {
         const { email, password, username, f_name, l_name } = request.all();
         console.log(email, password);
@@ -52,48 +74,5 @@ class UserController {
         //return response.status(200).send({message:'Has creado tu usuario con exito.'})
     }
 }
-=======
-    //return response.status(200).send({message:'Has creado tu usuario con exito.'})
-  }
-
-
-
-  async  login({request,response,auth}){
-    const {email,password} = request.all();
-    const validation = await validate(request.all(),{
-      email:'required',
-      password:'required'
-    });
-
-    if (validation.fails()){
-      return response.send({message:validation.messages()})
-    }
-
-    const user = await User.findBy('email', email);
-    if (!user){
-      return response.send({message:'No existe un usuario con ese email'})
-    }
-
-
-
-    const isSame = await Hash.verify(password,user.password);
-    if (!isSame){
-      return response.send({message:'Contraseña incorrecta'})
-    }
-
-
-    try {
-      if (await auth.attempt(email, password)) {
-        let user = await User.findBy('email', email)
-        let accessToken = await auth.generate(user)
-        return response.json({"access_token": accessToken})
-      }
-
-    }
-    catch (e) {
-      return response.json({message: 'You first need to register!'})
-    }
-  }}
->>>>>>> 5d18437d26aa46c6969877b06fcf7a61146537e9
 
 module.exports = UserController
