@@ -15,6 +15,30 @@ class UserController {
     return response.status(200).send({'message':"Iniciado", data:token});
   }
 
+  async updateUser({request,response}){
+    const validation = await validate(request.all(), {
+      username: 'required',
+      f_name: 'required',
+      l_name: 'required',
+      password: 'required|min:5'
+    });
+
+    if (validation.fails()){
+      return response.status(400).send({message:validation.messages()})
+    }
+
+    const user = await User
+    .query()
+    .where('id', request.body['id'])
+    .update({
+      username : request.body['username'],
+      f_name : request.body['f_name'],
+      l_name : request.body['l_name'],
+      password : request.body['password']
+    })
+    const editado = await User.query().where('id', request.body['id']).fetch()
+    return response.status(200).send({message:'Usuario editado con exito', data:editado})
+  }
 
   async signup({request, response}){
     const {email, password, username, f_name, l_name} = request.all();
