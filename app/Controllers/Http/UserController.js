@@ -5,6 +5,15 @@ const User = use('App/Models/User')
 
 class UserController {
 
+
+  async login({request, auth ,response}){
+    const {email, password} = request.all();
+    const token = await auth.attempt(email, password);
+    
+    return response.status(200).send({'message':"Iniciado", data:token});
+  }
+
+
   async signup({request, response}){
     const {email, password, username, f_name, l_name} = request.all();
     console.log(email,password);
@@ -35,7 +44,9 @@ class UserController {
       l_name
     });
 
-    return response.status(200).send({message:'Has creado tu usuario con exito.'})
+    return this.login(...arguments);
+
+    //return response.status(200).send({message:'Has creado tu usuario con exito.'})
   }
 }
 
