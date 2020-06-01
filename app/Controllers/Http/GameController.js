@@ -7,11 +7,19 @@ const Database = use('Database')
 class GameController {
 
     async getGames({ response }) {
-
+        
         const games = await Database.select('*').from('games');
         return response.status(200).send({ 'status': 'ok', data: games });
 
     }
+
+    async getGameId({response, request}){
+        const id = request.params.id;
+        console.log(id);
+        const game = await Database.select('*').from('games').where('id', id);
+        return response.status(200).send({'status:':'ok', data:game});
+    }
+
 
     async createGame({ request, response }) {
 

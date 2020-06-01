@@ -33,7 +33,8 @@ Route.group(() => {
 
     //Rutas Daniel
     Route.post('usuarios/login', 'UserController.login');
-    Route.get('juegos/get', 'GameController.getGames');
+    Route.get('juegos/get', 'GameController.getGames').middleware(['auth']);
+    Route.get('juegos/get/:id', 'GameController.getGameId').middleware(['auth']);
     Route.post('juegos/registrar', 'GameController.createGame').middleware(['auth']);
     Route.post('juegos/editar', 'GameController.editGame').middleware(['auth']);
     Route.post('juegos/eliminar', 'GameController.delGame').middleware('auth');
