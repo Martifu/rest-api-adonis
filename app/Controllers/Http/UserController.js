@@ -34,7 +34,7 @@ class UserController {
             const token = await auth.attempt(email, password);
             return response.status(200).send({ 'message': "Ok", data: token });
         } catch (error) {
-            return response.status(400).send({ 'message': error });
+            return response.status(400).send({ status:'error', 'message': error });
         }
 
 
@@ -84,7 +84,7 @@ class UserController {
         const userFound = await User.findBy('email', email);
         if (userFound) {
             return response.send({
-                message: 'Ya existe un usuario creado con ese email.'
+                status:'error' , message: 'Ya existe un usuario creado con ese email.'
             });
         }
 
